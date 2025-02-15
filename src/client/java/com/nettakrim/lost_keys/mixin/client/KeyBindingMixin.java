@@ -33,7 +33,12 @@ public class KeyBindingMixin {
 
         if (LostKeysClient.allMode != null) {
             original = null;
-            if (pressedKey.getTranslationKey().equals(LostKeysClient.allMode)) {
+            String targetKey = LostKeysClient.allMode;
+            KeyBinding redirect = KEYS_BY_ID.get(targetKey);
+            if (redirect != null) {
+                targetKey = redirect.getBoundKeyTranslationKey();
+            }
+            if (pressedKey.getTranslationKey().equals(targetKey)) {
                 KEYS_BY_ID.values().forEach((binding -> binding.setPressed(pressed)));
             }
         }
