@@ -1,11 +1,12 @@
 {
-	"required": true,
-	"package": "com.nettakrim.lost_keys.mixin.client",
-	"compatibilityLevel": "JAVA_21",
-	"client": [
-		"KeyBindingMixin"
-	],
-	"injectors": {
-		"defaultRequire": 1
+  "required": true,
+  "package": "com.nettakrim.lost_keys.mixin.client",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "KeyBindingMixin",
+    "MinecraftClientMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
 	}
 }
