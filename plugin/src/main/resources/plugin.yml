@@ -1,0 +1,10 @@
+name: lost_keys
+version: '1.0'
+main: com.nettakrim.lost_keys_plugin.LostKeys
+description: Plugin version of Lost Keys (https://modrinth.com/project/lost-keys)
+api-version: '1.21'
+commands:
+  executeclient:
+    description: "temporarily rebinds a client's controls"
+    usage: "/lostkeys:override <player> <binding> <key>"
+    permission: lost_keys.override

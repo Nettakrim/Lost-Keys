@@ -1,0 +1,39 @@
+{
+	"schemaVersion": 1,
+	"id": "lost_keys",
+	"version": "${version}",
+	"name": "Lost Keys",
+	"description": "Temporarily rebinds client's controls from the server",
+	"authors": [
+		"Nettakrim"
+	],
+	"contact": {
+		"sources": "https://github.com/Nettakrim/Lost-Keys"
+	},
+	"license": "LGPL-3.0",
+	"icon": "assets/lost_keys/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"com.nettakrim.lost_keys.LostKeys"
+		],
+		"client": [
+			"com.nettakrim.lost_keys.LostKeysClient"
+		]
+	},
+	"mixins": [
+		"lost_keys.mixins.json",
+		{
+			"config": "lost_keys.client.mixins.json",
+			"environment": "client"
+		}
+	],
+	"depends": {
+		"fabricloader": ">=0.16.10",
+		"minecraft": ">=1.21.0",
+		"java": ">=21",
+		"fabric-api": "*"
+	},
+	"suggests": {
+	}
+}

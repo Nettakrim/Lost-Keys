@@ -1,0 +1,6 @@
+{
+  "lost_keys.say": "[Lost Keys]",
+  "lost_keys.override": "\n%s: %s",
+  "lost_keys.log.key": " none: %s",
+  "lost_keys.log.binding": " %s: %s"
+}
