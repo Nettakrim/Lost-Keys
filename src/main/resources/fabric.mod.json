@@ -3,7 +3,7 @@
 	"id": "lost_keys",
 	"version": "${version}",
 	"name": "Lost Keys",
-	"description": "Temporarily rebinds client's controls from the server",
+	"description": "Temporarily rebind a client's controls from the server!",
 	"authors": [
 		"Nettakrim"
 	],
