@@ -15,7 +15,7 @@ public class OverrideCommandExecutor implements CommandExecutor {
 
     @Override
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        if (command.getLabel().equalsIgnoreCase("lost_keys:override")) {
+        if (command.getLabel().equalsIgnoreCase("override")) {
             if (args.length < 3) {
                 commandSender.sendMessage("not enough arguments! /lost_keys:override <player> <binding> <key>");
                 return false;
@@ -39,7 +39,6 @@ public class OverrideCommandExecutor implements CommandExecutor {
                 }
             }
         }
-
         return true;
     }
 }

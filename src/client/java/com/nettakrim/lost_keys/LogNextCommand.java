@@ -9,7 +9,7 @@ import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 public class LogNextCommand {
     public static void register(RootCommandNode<FabricClientCommandSource> root) {
         LiteralCommandNode<FabricClientCommandSource> biteSoundNode = ClientCommandManager
-                .literal("lostkeys:lognext")
+                .literal("lost_keys:lognext")
                 .executes(LogNextCommand::logNext)
                 .build();
 

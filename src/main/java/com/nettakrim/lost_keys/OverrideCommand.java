@@ -15,7 +15,7 @@ import java.util.Iterator;
 public class OverrideCommand{
     public static void registerNode(RootCommandNode<ServerCommandSource> root) {
         LiteralCommandNode<ServerCommandSource> clientExecutionNode = CommandManager
-            .literal("lostkeys:override")
+            .literal("lost_keys:override")
             .requires((source) -> source.hasPermissionLevel(2))
             .then(
                 CommandManager.argument("targets", EntityArgumentType.players()).then(
