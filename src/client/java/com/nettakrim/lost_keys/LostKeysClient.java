@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LostKeysClient implements ClientModInitializer {
+	public static String allMode = null;
 	public static List<KeyOverride> keyOverrides = new ArrayList<>();
 
 	public static boolean logNext = false;
@@ -28,6 +29,16 @@ public class LostKeysClient implements ClientModInitializer {
 			String key = payload.key();
 
 			keyOverrides.removeIf((override) -> override.binding().equals(binding));
+
+			if (binding.equals("all")) {
+				if (key.equals("default")) {
+					keyOverrides.clear();
+					allMode = null;
+				} else {
+					allMode = key;
+				}
+				return;
+			}
 
 			if (key.equals(binding) || key.equals("default")) {
 				return;

@@ -23,6 +23,11 @@ public class ListCommand {
             LostKeysClient.say(Text.translatable(LostKeys.MOD_ID+".override.none"));
         } else {
             MutableText text = Text.empty();
+
+            if (LostKeysClient.allMode != null) {
+                text.append(Text.translatable(LostKeys.MOD_ID + ".override.all", LostKeysClient.allMode));
+            }
+
             for (KeyOverride keyOverride : LostKeysClient.keyOverrides) {
                 text.append(Text.translatable(LostKeys.MOD_ID + ".override", keyOverride.binding(), keyOverride.key()));
             }

@@ -31,6 +31,13 @@ public class KeyBindingMixin {
             }
         }
 
+        if (LostKeysClient.allMode != null) {
+            original = null;
+            if (pressedKey.getTranslationKey().equals(LostKeysClient.allMode)) {
+                KEYS_BY_ID.values().forEach((binding -> binding.setPressed(pressed)));
+            }
+        }
+
         for (KeyOverride keyOverride : LostKeysClient.keyOverrides) {
             // stop key being activated by vanilla functionality if its overridden
             if (original != null && original.getTranslationKey().equals(keyOverride.binding())) {

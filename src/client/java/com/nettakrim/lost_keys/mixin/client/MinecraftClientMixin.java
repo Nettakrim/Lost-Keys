@@ -12,5 +12,6 @@ public class MinecraftClientMixin {
     @Inject(method = "disconnect(Lnet/minecraft/client/gui/screen/Screen;)V", at = @At("RETURN"))
     private void saveSpace(CallbackInfo ci) {
         LostKeysClient.keyOverrides.clear();
+        LostKeysClient.allMode = null;
     }
 }
