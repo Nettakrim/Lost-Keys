@@ -40,7 +40,7 @@ public class LostKeysClient implements ClientModInitializer {
 				return;
 			}
 
-			if (key.equals(binding) || key.equals("default")) {
+			if (allMode == null || key.equals("default")) {
 				return;
 			}
 
