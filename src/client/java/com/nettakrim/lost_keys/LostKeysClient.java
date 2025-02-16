@@ -24,28 +24,7 @@ public class LostKeysClient implements ClientModInitializer {
 
 	@Override
 	public void onInitializeClient() {
-		ClientPlayNetworking.registerGlobalReceiver(OverridePayload.PACKET_ID, ((payload, context) -> {
-			String binding = payload.binding();
-			String key = payload.key();
-
-			keyOverrides.removeIf((override) -> override.binding().equals(binding));
-
-			if (binding.equals("all")) {
-				if (key.equals("default")) {
-					keyOverrides.clear();
-					allMode = null;
-				} else {
-					allMode = key;
-				}
-				return;
-			}
-
-			if (allMode == null || key.equals("default")) {
-				return;
-			}
-
-			keyOverrides.add(new KeyOverride(binding, key));
-		}));
+		ClientPlayNetworking.registerGlobalReceiver(OverridePayload.PACKET_ID, ((payload, context) -> addOverride(payload.binding(), payload.key())));
 
 		ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> {
 			RootCommandNode<FabricClientCommandSource> root = dispatcher.getRoot();
@@ -53,6 +32,26 @@ public class LostKeysClient implements ClientModInitializer {
 			ListCommand.register(root);
 			LogNextCommand.register(root);
 		});
+	}
+
+	public static void addOverride(String binding, String key) {
+		keyOverrides.removeIf((override) -> override.binding().equals(binding));
+
+		if (binding.equals("all")) {
+			if (key.equals("default")) {
+				keyOverrides.clear();
+				allMode = null;
+			} else {
+				allMode = key;
+			}
+			return;
+		}
+
+		if (key.equals("default")) {
+			return;
+		}
+
+		keyOverrides.add(new KeyOverride(binding, key));
 	}
 
 	public static void say(MutableText text) {
