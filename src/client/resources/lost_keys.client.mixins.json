@@ -3,6 +3,7 @@
   "package": "com.nettakrim.lost_keys.mixin.client",
   "compatibilityLevel": "JAVA_21",
   "client": [
+    "KeyBindingAccessor",
     "KeyBindingMixin",
     "MinecraftClientMixin"
   ],

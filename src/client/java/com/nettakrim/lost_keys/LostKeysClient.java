@@ -1,17 +1,20 @@
 package com.nettakrim.lost_keys;
 
 import com.mojang.brigadier.tree.RootCommandNode;
+import com.nettakrim.lost_keys.mixin.client.KeyBindingAccessor;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.option.KeyBinding;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class LostKeysClient implements ClientModInitializer {
 	public static String allMode = null;
@@ -37,7 +40,13 @@ public class LostKeysClient implements ClientModInitializer {
 	public static void addOverride(String binding, String key) {
 		keyOverrides.removeIf((override) -> override.binding().equals(binding));
 
+		Map<String, KeyBinding> keyBindings = KeyBindingAccessor.getBinding();
+
 		if (binding.equals("all")) {
+			for (KeyBinding targetBinding : keyBindings.values()) {
+				targetBinding.setPressed(false);
+			}
+
 			if (key.equals("default")) {
 				keyOverrides.clear();
 				allMode = null;
@@ -45,6 +54,11 @@ public class LostKeysClient implements ClientModInitializer {
 				allMode = key;
 			}
 			return;
+		}
+
+		KeyBinding targetBinding = keyBindings.get(binding);
+		if (targetBinding != null) {
+			targetBinding.setPressed(false);
 		}
 
 		if (key.equals("default")) {
