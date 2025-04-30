@@ -1,5 +1,5 @@
 name: lost_keys
-version: '1.0'
+version: '1.1'
 main: com.nettakrim.lost_keys_plugin.LostKeys
 description: Plugin version of Lost Keys (https://modrinth.com/project/lost-keys)
 api-version: '1.21'
