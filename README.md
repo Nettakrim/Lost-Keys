@@ -2,7 +2,7 @@
 
 required on both server and client (although it shouldnt crash anything if only client/only server has it)
 
-## Server Side Command:
+## Server Side Commands:
 
 it adds a server side command `/lost_keys:override <player> <binding> <key>` that temporarily (until the player relogs) replaces the key for a given binding
 
@@ -13,6 +13,8 @@ the `<key>` can also be set to whatever the value of another binding is, so `/lo
 to clear an override, set the `<key>` to `default` (or itself), to disable a key, set the `<key>` to `none` (or any invalid key), to force a `<key>` to be pressed, set it to `pressed`
 
 the `<binding>` can also be `all`, which can be used to clear all overrides at once: `/lost_keys:override <player> all default`, disable all keys: `/lost_keys:override <player> all none` (then specific keys can be enabled by setting them to themselves) , or cause a mess: `/lost_keys:override <player> all key.keyboard.a`
+
+you can also set keybindings to run commands, like so: `/lost_keys:override <player> <binding> <command>`, the command does not include the /, so: `/lost_keys:override @s key.forward say hi`, and the binding cannot be keyboard keys
 
 ## Client Side Commands:
 

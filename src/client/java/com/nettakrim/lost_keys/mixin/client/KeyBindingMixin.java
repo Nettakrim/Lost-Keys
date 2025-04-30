@@ -6,6 +6,8 @@ import com.nettakrim.lost_keys.KeyBindingInterface;
 import com.nettakrim.lost_keys.KeyOverride;
 import com.nettakrim.lost_keys.LostKeys;
 import com.nettakrim.lost_keys.LostKeysClient;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.text.Text;
@@ -24,6 +26,8 @@ public abstract class KeyBindingMixin implements KeyBindingInterface {
     @Shadow @Final private static Map<String, KeyBinding> KEYS_BY_ID;
 
     @Shadow public abstract String getTranslationKey();
+
+    @Shadow public abstract String getBoundKeyTranslationKey();
 
     @Unique private boolean value0;
     @Unique private boolean value1;
@@ -103,7 +107,7 @@ public abstract class KeyBindingMixin implements KeyBindingInterface {
                 KeyBindingMixin mixin = (KeyBindingMixin)(Object)redirect;
 
                 exhausted = true;
-                return mixin.value2 && !mixin.value1;
+                return mixin.value1 && !mixin.value2;
             }
         }
 
@@ -112,6 +116,16 @@ public abstract class KeyBindingMixin implements KeyBindingInterface {
 
     @Override
     public void lostKeys$update() {
+        if (value0 && !value1) {
+            String command = LostKeysClient.commandOverrides.getOrDefault(getTranslationKey(), LostKeysClient.commandOverrides.get(getBoundKeyTranslationKey()));
+            if (command != null) {
+                ClientPlayNetworkHandler handler = MinecraftClient.getInstance().getNetworkHandler();
+                if (handler != null) {
+                    handler.sendChatCommand(command);
+                }
+            }
+        }
+
         value2 = value1;
         value1 = value0;
         exhausted = false;
