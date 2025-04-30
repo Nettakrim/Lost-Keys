@@ -16,14 +16,14 @@ public final class LostKeys extends JavaPlugin {
         getServer().getMessenger().registerOutgoingPluginChannel(this, "lost_keys:override");
     }
 
-    public void sendOverride(Player player, String binding, String key) {
+    public void sendMessage(Player player, String binding, String key, String type) {
         byte[] bindingBuf = getStringBuf(binding);
         byte[] keyBuf = getStringBuf(key);
         byte[] packetBuf = new byte[bindingBuf.length+keyBuf.length];
         System.arraycopy(bindingBuf, 0, packetBuf, 0, bindingBuf.length);
         System.arraycopy(keyBuf, 0, packetBuf, bindingBuf.length, keyBuf.length);
 
-        player.sendPluginMessage(this, "lost_keys:override", packetBuf);
+        player.sendPluginMessage(this, "lost_keys:"+type, packetBuf);
     }
 
     private byte[] getStringBuf(String s) {
