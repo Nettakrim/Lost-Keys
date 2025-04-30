@@ -1,6 +1,7 @@
 package com.nettakrim.lost_keys.mixin.client;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.nettakrim.lost_keys.KeyOverride;
 import com.nettakrim.lost_keys.LostKeys;
 import com.nettakrim.lost_keys.LostKeysClient;
@@ -10,13 +11,16 @@ import net.minecraft.text.Text;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 
 import java.util.Map;
 
 @Mixin(KeyBinding.class)
-public class KeyBindingMixin {
+public abstract class KeyBindingMixin {
     @Shadow @Final private static Map<String, KeyBinding> KEYS_BY_ID;
+
+    @Shadow public abstract String getTranslationKey();
 
     @ModifyExpressionValue(at = @At(value = "INVOKE", target = "Ljava/util/Map;get(Ljava/lang/Object;)Ljava/lang/Object;"), method = "setKeyPressed")
     private static <V> V applyKeyOverrides(V originalV, InputUtil.Key pressedKey, boolean pressed) {
@@ -70,5 +74,35 @@ public class KeyBindingMixin {
 
         // noinspection unchecked
         return (V)original;
+    }
+
+    @Unique
+    private static boolean ignoreOverride;
+
+    @ModifyReturnValue(at = @At(value = "RETURN"), method = "wasPressed")
+    private boolean setWasPressed(boolean original) {
+        // escape infinite loops
+        if (ignoreOverride) {
+            ignoreOverride = false;
+            return original;
+        }
+
+        // for some reason returning a forced true (ie if keyOverride.key().equals("pressed")) freezes the game, so all cant work
+        for (KeyOverride keyOverride : LostKeysClient.keyOverrides) {
+            if (keyOverride.binding().equals(getTranslationKey())) {
+                // getting the keybinding from a keyboard key is awkward
+                KeyBinding redirect = KEYS_BY_ID.get(keyOverride.key());
+
+                if (redirect == null) {
+                    return original;
+                }
+
+                ignoreOverride = true;
+                // it looks like wasPressed is only usable once per frame, so if you override a key with another key that needs to use wasPressed, it might act weird (untested)
+                return redirect.wasPressed();
+            }
+        }
+
+        return original;
     }
 }

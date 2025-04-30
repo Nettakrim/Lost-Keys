@@ -22,7 +22,7 @@ and `/lost_keys:list`, which tells you all applied overrides
 
 ## Notes:
 
-not all keys work, because minecraft is inconsistent, but all the important ones like movement and attacking do
+not all keys work, because minecraft is inconsistent, but all the important ones like movement and attacking do. Likewise some keys will not work properly with all overrides
 
 ### Plugin Version:
 the permission node is `lost_keys.override`, and it only works with specifically mentioned players and @a - so `/lost_keys:override Steve key.forward none` works, but `/lost_keys:override @p key.forward none` or `/execute as Steve run lost_keys:override @s key.forward none` do not! this is an important difference!
