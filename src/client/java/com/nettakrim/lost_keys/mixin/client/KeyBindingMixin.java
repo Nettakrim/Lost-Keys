@@ -2,6 +2,7 @@ package com.nettakrim.lost_keys.mixin.client;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
+import com.nettakrim.lost_keys.KeyBindingInterface;
 import com.nettakrim.lost_keys.KeyOverride;
 import com.nettakrim.lost_keys.LostKeys;
 import com.nettakrim.lost_keys.LostKeysClient;
@@ -13,14 +14,22 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.Map;
 
 @Mixin(KeyBinding.class)
-public abstract class KeyBindingMixin {
+public abstract class KeyBindingMixin implements KeyBindingInterface {
     @Shadow @Final private static Map<String, KeyBinding> KEYS_BY_ID;
 
     @Shadow public abstract String getTranslationKey();
+
+    @Unique private boolean value0;
+    @Unique private boolean value1;
+    @Unique private boolean value2;
+
+    @Unique private boolean exhausted;
 
     @ModifyExpressionValue(at = @At(value = "INVOKE", target = "Ljava/util/Map;get(Ljava/lang/Object;)Ljava/lang/Object;"), method = "setKeyPressed")
     private static <V> V applyKeyOverrides(V originalV, InputUtil.Key pressedKey, boolean pressed) {
@@ -76,18 +85,12 @@ public abstract class KeyBindingMixin {
         return (V)original;
     }
 
-    @Unique
-    private static boolean ignoreOverride;
-
     @ModifyReturnValue(at = @At(value = "RETURN"), method = "wasPressed")
-    private boolean setWasPressed(boolean original) {
-        // escape infinite loops
-        if (ignoreOverride) {
-            ignoreOverride = false;
+    private boolean applyKeyPressedOverrides(boolean original) {
+        if (exhausted) {
             return original;
         }
 
-        // for some reason returning a forced true (ie if keyOverride.key().equals("pressed")) freezes the game, so all cant work
         for (KeyOverride keyOverride : LostKeysClient.keyOverrides) {
             if (keyOverride.binding().equals(getTranslationKey())) {
                 // getting the keybinding from a keyboard key is awkward
@@ -97,12 +100,25 @@ public abstract class KeyBindingMixin {
                     return original;
                 }
 
-                ignoreOverride = true;
-                // it looks like wasPressed is only usable once per frame, so if you override a key with another key that needs to use wasPressed, it might act weird (untested)
-                return redirect.wasPressed();
+                KeyBindingMixin mixin = (KeyBindingMixin)(Object)redirect;
+
+                exhausted = true;
+                return mixin.value2 && !mixin.value1;
             }
         }
 
         return original;
+    }
+
+    @Override
+    public void lostKeys$update() {
+        value2 = value1;
+        value1 = value0;
+        exhausted = false;
+    }
+
+    @Inject(at = @At("TAIL"), method = "setPressed")
+    private void onSetPressed(boolean pressed, CallbackInfo ci) {
+        value0 = pressed;
     }
 }

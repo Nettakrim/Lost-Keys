@@ -5,6 +5,7 @@ import com.nettakrim.lost_keys.mixin.client.KeyBindingAccessor;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.KeyBinding;
@@ -35,6 +36,8 @@ public class LostKeysClient implements ClientModInitializer {
 			ListCommand.register(root);
 			LogNextCommand.register(root);
 		});
+
+		ClientTickEvents.START_CLIENT_TICK.register((client) -> KeyBindingAccessor.getBinding().values().forEach(keyBinding -> ((KeyBindingInterface)keyBinding).lostKeys$update()));
 	}
 
 	public static void addOverride(String binding, String key) {
