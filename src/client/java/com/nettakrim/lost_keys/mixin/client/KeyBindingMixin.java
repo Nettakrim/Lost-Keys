@@ -46,6 +46,10 @@ public class KeyBindingMixin {
         for (KeyOverride keyOverride : LostKeysClient.keyOverrides) {
             // stop key being activated by vanilla functionality if its overridden
             if (original != null && original.getTranslationKey().equals(keyOverride.binding())) {
+                if (keyOverride.key().equals("pressed")) {
+                    original.setPressed(true);
+                    return null;
+                }
                 original = null;
             }
 

@@ -58,7 +58,7 @@ public class LostKeysClient implements ClientModInitializer {
 
 		KeyBinding targetBinding = keyBindings.get(binding);
 		if (targetBinding != null) {
-			targetBinding.setPressed(false);
+			targetBinding.setPressed(key.equals("pressed"));
 		}
 
 		if (key.equals("default")) {
