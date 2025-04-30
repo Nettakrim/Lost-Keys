@@ -14,7 +14,7 @@ to clear an override, set the `<key>` to `default` (or itself), to disable a key
 
 the `<binding>` can also be `all`, which can be used to clear all overrides at once: `/lost_keys:override <player> all default`, disable all keys: `/lost_keys:override <player> all none` (then specific keys can be enabled by setting them to themselves) , or cause a mess: `/lost_keys:override <player> all key.keyboard.a`
 
-you can also set keybindings to run commands, like so: `/lost_keys:command <player> <binding> <command>`, the command does not include the /, so: `/lost_keys:command @s key.forward say hi`, and the binding cannot be keyboard keys
+you can also set keybindings to run commands, like so: `/lost_keys:command <player> <binding> <command>`, the command does not include the /, so: `/lost_keys:command @s key.forward say hi`, and the binding cannot be keyboard keys. commands are run by the client, so commands that require op wont work on an unopped player
 
 ## Client Side Commands:
 
