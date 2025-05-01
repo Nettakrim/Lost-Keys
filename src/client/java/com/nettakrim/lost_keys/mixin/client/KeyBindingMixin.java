@@ -6,8 +6,6 @@ import com.nettakrim.lost_keys.KeyBindingInterface;
 import com.nettakrim.lost_keys.KeyOverride;
 import com.nettakrim.lost_keys.LostKeys;
 import com.nettakrim.lost_keys.LostKeysClient;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.text.Text;
@@ -19,7 +17,9 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 @Mixin(KeyBinding.class)
 public abstract class KeyBindingMixin implements KeyBindingInterface {
@@ -27,17 +27,27 @@ public abstract class KeyBindingMixin implements KeyBindingInterface {
 
     @Shadow public abstract String getTranslationKey();
 
-    @Shadow public abstract String getBoundKeyTranslationKey();
-
     @Unique private boolean value0;
     @Unique private boolean value1;
     @Unique private boolean value2;
 
     @Unique private boolean exhausted;
 
+    @Unique private static final Set<InputUtil.Key> pressedCommands = new HashSet<>();
+
     @ModifyExpressionValue(at = @At(value = "INVOKE", target = "Ljava/util/Map;get(Ljava/lang/Object;)Ljava/lang/Object;"), method = "setKeyPressed")
     private static <V> V applyKeyOverrides(V originalV, InputUtil.Key pressedKey, boolean pressed) {
         KeyBinding original = (KeyBinding)originalV;
+
+        String command = LostKeysClient.commandBinds.get(pressedKey.getTranslationKey());
+        if (command != null && pressed != pressedCommands.contains(pressedKey)) {
+            if (pressed) {
+                LostKeysClient.runCommand(command);
+                pressedCommands.add(pressedKey);
+            } else {
+                pressedCommands.remove(pressedKey);
+            }
+        }
 
         if (pressed && LostKeysClient.logNext) {
             LostKeysClient.logNext = false;
@@ -117,13 +127,7 @@ public abstract class KeyBindingMixin implements KeyBindingInterface {
     @Override
     public void lostKeys$update() {
         if (value0 && !value1) {
-            String command = LostKeysClient.commandBinds.getOrDefault(getTranslationKey(), LostKeysClient.commandBinds.get(getBoundKeyTranslationKey()));
-            if (command != null) {
-                ClientPlayNetworkHandler handler = MinecraftClient.getInstance().getNetworkHandler();
-                if (handler != null) {
-                    handler.sendChatCommand(command);
-                }
-            }
+            LostKeysClient.runCommand(LostKeysClient.commandBinds.get(getTranslationKey()));
         }
 
         value2 = value1;

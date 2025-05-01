@@ -8,10 +8,12 @@ import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -87,4 +89,15 @@ public class LostKeysClient implements ClientModInitializer {
 		if (client.player == null) return;
 		client.player.sendMessage(Text.translatable(LostKeys.MOD_ID+".say").setStyle(nameStyle).append(text.setStyle(textStyle)), false);
 	}
+
+	public static void runCommand(@Nullable String command) {
+		if (command == null) {
+			return;
+		}
+
+        ClientPlayNetworkHandler handler = MinecraftClient.getInstance().getNetworkHandler();
+        if (handler != null) {
+            handler.sendChatCommand(command);
+        }
+    }
 }

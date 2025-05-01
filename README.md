@@ -14,7 +14,7 @@ to clear an override, set the `<key>` to `default` (or itself), to disable a key
 
 the `<binding>` can also be `all`, which can be used to clear all overrides at once: `/lost_keys:override <player> all default`, disable all keys: `/lost_keys:override <player> all none` (then specific keys can be enabled by setting them to themselves) , or cause a mess: `/lost_keys:override <player> all key.keyboard.a`
 
-you can also set keybindings to run commands, like so: `/lost_keys:command <player> <binding> <command>`, the command does not include the /, so: `/lost_keys:command @s key.forward say hi`, and the binding cannot be keyboard keys. commands are run by the client, so commands that require op wont work on an unopped player
+you can also set keybindings to run commands, like so: `/lost_keys:bind_command <player> <binding> <command>`, the command does not include the /, so: `/lost_keys:bind_command @s key.forward say hi`, and the binding can also be keyboard keys. *commands are run by the client*, so commands that require op won't work on an unopped player
 
 ## Client Side Commands:
 
@@ -28,3 +28,5 @@ not all keys work, because minecraft is inconsistent, but all the important ones
 
 ### Plugin Version:
 the permission node is `lost_keys.override`, and it only works with specifically mentioned players and @a - so `/lost_keys:override Steve key.forward none` works, but `/lost_keys:override @p key.forward none` or `/execute as Steve run lost_keys:override @s key.forward none` do not! this is an important difference!
+
+the same limitations apply for `/lost_keys:bind_command`, and it's permission node is `lost_keys.bind_command`
