@@ -49,8 +49,9 @@ public class LostKeysClient implements ClientModInitializer {
 		Map<String, KeyBinding> keyBindings = KeyBindingAccessor.getBinding();
 
 		if (binding.equals("all")) {
+			boolean pressed = key.equals("pressed");
 			for (KeyBinding targetBinding : keyBindings.values()) {
-				targetBinding.setPressed(false);
+				targetBinding.setPressed(pressed);
 			}
 
 			if (key.equals("default")) {
@@ -75,6 +76,11 @@ public class LostKeysClient implements ClientModInitializer {
 	}
 
 	public static void addCommandBind(String binding, String command) {
+		if (binding.equals("all")) {
+			commandBinds.clear();
+			return;
+		}
+
 		if (command.equals("none") || command.equals("default")) {
 			commandBinds.remove(binding);
 		} else {
