@@ -6,14 +6,16 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
 
 public final class LostKeys extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        getCommand("override").setExecutor(new OverrideCommandExecutor(this));
+        OverrideCommandExecutor executor = new OverrideCommandExecutor(this);
+        getCommand("override").setExecutor(executor);
+        getCommand("bind_command").setExecutor(executor);
         getServer().getMessenger().registerOutgoingPluginChannel(this, "lost_keys:override");
+        getServer().getMessenger().registerOutgoingPluginChannel(this, "lost_keys:bind_command");
     }
 
     public void sendMessage(Player player, String binding, String key, String type) {

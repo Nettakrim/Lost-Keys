@@ -8,7 +8,7 @@ commands:
     description: "temporarily rebinds a client's controls"
     usage: "/lost_keys:override <player> <binding> <key>"
     permission: lost_keys.override
-  command:
+  bind_command:
     description: "temporarily adds a command to a keybinding"
-    usage: "/lost_keys:command <player> <binding> <command>"
-    permission: lost_keys.command
+    usage: "/lost_keys:bind_command <player> <binding> <command>"
+    permission: lost_keys.bind_command

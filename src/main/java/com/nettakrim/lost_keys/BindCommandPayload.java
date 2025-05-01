@@ -6,14 +6,14 @@ import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.codec.PacketCodecs;
 import net.minecraft.network.packet.CustomPayload;
 
-public record CommandPayload(String binding, String command) implements CustomPayload {
-    public static final Id<CommandPayload> PACKET_ID = new Id<>(LostKeys.command);
-    public static final PacketCodec<RegistryByteBuf, CommandPayload> PACKET_CODEC = PacketCodec.tuple(
+public record BindCommandPayload(String binding, String command) implements CustomPayload {
+    public static final Id<BindCommandPayload> PACKET_ID = new Id<>(LostKeys.bindCommand);
+    public static final PacketCodec<RegistryByteBuf, BindCommandPayload> PACKET_CODEC = PacketCodec.tuple(
             PacketCodecs.STRING,
-            CommandPayload::binding,
+            BindCommandPayload::binding,
             PacketCodecs.STRING,
-            CommandPayload::command,
-            CommandPayload::new
+            BindCommandPayload::command,
+            BindCommandPayload::new
     );
 
     @Override

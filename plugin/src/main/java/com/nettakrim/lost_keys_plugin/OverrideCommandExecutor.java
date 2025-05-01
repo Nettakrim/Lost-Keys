@@ -16,10 +16,10 @@ public class OverrideCommandExecutor implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         boolean isOverride = command.getLabel().equalsIgnoreCase("override");
-        boolean isCommand = command.getLabel().equalsIgnoreCase("command");
+        boolean isCommand = command.getLabel().equalsIgnoreCase("bind_command");
         if (isOverride || isCommand) {
             if (args.length < 3) {
-                commandSender.sendMessage("not enough arguments! /lost_keys:override <player> <binding> <" + (isOverride ? "key>" : "command>"));
+                commandSender.sendMessage("not enough arguments! /lost_keys:"+(isOverride ? "override":"bind_command")+" <player> <binding> <" + (isOverride ? "key>" : "command>"));
                 return false;
             }
 
@@ -33,16 +33,16 @@ public class OverrideCommandExecutor implements CommandExecutor {
             }
 
             String binding = args[1];
-            String key = args[2];
+            StringBuilder key = new StringBuilder(args[2]);
             if (args.length > 3) {
                 for (int i = 3; i < args.length; i++) {
-                    key += " "+args[i];
+                    key.append(" ").append(args[i]);
                 }
             }
 
             for (Player player : players) {
                 if (player != null) {
-                    plugin.sendMessage(player, binding, key, isOverride ? "override" : "command");
+                    plugin.sendMessage(player, binding, key.toString(), isOverride ? "override" : "bind_command");
                 }
             }
         }

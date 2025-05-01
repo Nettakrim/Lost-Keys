@@ -12,15 +12,15 @@ import net.minecraft.server.network.ServerPlayerEntity;
 
 import java.util.Iterator;
 
-public class CommandCommand {
+public class BindCommandCommand {
     public static void registerNode(RootCommandNode<ServerCommandSource> root) {
         LiteralCommandNode<ServerCommandSource> clientExecutionNode = CommandManager
-            .literal("lost_keys:command")
+            .literal("lost_keys:bind_command")
             .requires((source) -> source.hasPermissionLevel(2))
             .then(
                 CommandManager.argument("targets", EntityArgumentType.players()).then(
                     CommandManager.argument("binding", StringArgumentType.string()).then(
-                            CommandManager.argument("command", StringArgumentType.greedyString()).executes(CommandCommand::run)
+                            CommandManager.argument("command", StringArgumentType.greedyString()).executes(BindCommandCommand::run)
                     )
                 )
             )
@@ -31,7 +31,7 @@ public class CommandCommand {
 
     public static int run(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
         String binding = StringArgumentType.getString(context, "binding");
-        String key = StringArgumentType.getString(context, "key");
+        String key = StringArgumentType.getString(context, "command");
 
         int i = 0;
 

@@ -21,7 +21,7 @@ import java.util.Map;
 public class LostKeysClient implements ClientModInitializer {
 	public static String allMode = null;
 	public static List<KeyOverride> keyOverrides = new ArrayList<>();
-	public static HashMap<String, String> commandOverrides = new HashMap<>();
+	public static HashMap<String, String> commandBinds = new HashMap<>();
 
 	public static boolean logNext = false;
 
@@ -31,7 +31,7 @@ public class LostKeysClient implements ClientModInitializer {
 	@Override
 	public void onInitializeClient() {
 		ClientPlayNetworking.registerGlobalReceiver(OverridePayload.PACKET_ID, ((payload, context) -> addOverride(payload.binding(), payload.key())));
-		ClientPlayNetworking.registerGlobalReceiver(CommandPayload.PACKET_ID, ((payload, context) -> addCommand(payload.binding(), payload.command())));
+		ClientPlayNetworking.registerGlobalReceiver(BindCommandPayload.PACKET_ID, ((payload, context) -> addCommandBind(payload.binding(), payload.command())));
 
 		ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> {
 			RootCommandNode<FabricClientCommandSource> root = dispatcher.getRoot();
@@ -74,11 +74,11 @@ public class LostKeysClient implements ClientModInitializer {
 		keyOverrides.add(new KeyOverride(binding, key));
 	}
 
-	public static void addCommand(String binding, String command) {
+	public static void addCommandBind(String binding, String command) {
 		if (command.equals("none") || command.equals("default")) {
-			commandOverrides.remove(binding);
+			commandBinds.remove(binding);
 		} else {
-			commandOverrides.put(binding, command);
+			commandBinds.put(binding, command);
 		}
 	}
 

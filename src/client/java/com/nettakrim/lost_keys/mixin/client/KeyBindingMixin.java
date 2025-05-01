@@ -117,7 +117,7 @@ public abstract class KeyBindingMixin implements KeyBindingInterface {
     @Override
     public void lostKeys$update() {
         if (value0 && !value1) {
-            String command = LostKeysClient.commandOverrides.getOrDefault(getTranslationKey(), LostKeysClient.commandOverrides.get(getBoundKeyTranslationKey()));
+            String command = LostKeysClient.commandBinds.getOrDefault(getTranslationKey(), LostKeysClient.commandBinds.get(getBoundKeyTranslationKey()));
             if (command != null) {
                 ClientPlayNetworkHandler handler = MinecraftClient.getInstance().getNetworkHandler();
                 if (handler != null) {

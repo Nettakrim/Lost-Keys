@@ -17,26 +17,26 @@ public class LostKeys implements ModInitializer {
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
 	public static Identifier override = Identifier.of(MOD_ID, "override");
-	public static Identifier command = Identifier.of(MOD_ID, "command");
+	public static Identifier bindCommand = Identifier.of(MOD_ID, "bind_command");
 
 	public static void overridePlayer(ServerPlayerEntity player, String binding, String key) {
 		ServerPlayNetworking.send(player, new OverridePayload(binding, key));
 	}
 
 	public static void commandPlayer(ServerPlayerEntity player, String binding, String key) {
-		ServerPlayNetworking.send(player, new CommandPayload(binding, key));
+		ServerPlayNetworking.send(player, new BindCommandPayload(binding, key));
 	}
 
 	@Override
 	public void onInitialize() {
 		OverridePayload.register();
-		CommandPayload.register();
+		BindCommandPayload.register();
 
 		CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
 			RootCommandNode<ServerCommandSource> root = dispatcher.getRoot();
 
 			OverrideCommand.registerNode(root);
-			CommandCommand.registerNode(root);
+			BindCommandCommand.registerNode(root);
 		});
 	}
 }
