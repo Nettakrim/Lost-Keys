@@ -108,6 +108,14 @@ public abstract class KeyBindingMixin implements KeyBindingInterface {
 
         for (KeyOverride keyOverride : LostKeysClient.keyOverrides) {
             if (keyOverride.binding().equals(getTranslationKey())) {
+                if (keyOverride.key().equals("none")) {
+                    return false;
+                }
+                if (keyOverride.key().equals("pressed")) {
+                    exhausted = true;
+                    return true;
+                }
+
                 // getting the keybinding from a keyboard key is awkward
                 KeyBinding redirect = KEYS_BY_ID.get(keyOverride.key());
 
