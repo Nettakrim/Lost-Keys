@@ -110,10 +110,15 @@ public abstract class KeyBindingMixin implements KeyBindingInterface {
 
         String key = LostKeysClient.keyOverrides.get(getTranslationKey());
         if (key == null) {
+            key = LostKeysClient.allMode;
+        }
+
+        if (key == null) {
             return original;
         }
 
-        if (key.equals("none")) {
+        // getting the keybinding from a keyboard key is awkward
+        if (key.equals("none") || key.startsWith("key.keyboard.")) {
             return false;
         }
         if (key.equals("pressed")) {
@@ -121,7 +126,6 @@ public abstract class KeyBindingMixin implements KeyBindingInterface {
             return true;
         }
 
-        // getting the keybinding from a keyboard key is awkward
         KeyBinding redirect = KEYS_BY_ID.get(key);
 
         if (redirect == null) {

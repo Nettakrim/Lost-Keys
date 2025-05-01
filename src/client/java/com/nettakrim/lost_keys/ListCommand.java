@@ -20,15 +20,14 @@ public class ListCommand {
 
     public static int list(CommandContext<FabricClientCommandSource> context) {
         if (LostKeysClient.keyOverrides.isEmpty() && LostKeysClient.commandBinds.isEmpty()) {
-            LostKeysClient.say(Text.translatable(LostKeys.MOD_ID+".override.none"));
+            LostKeysClient.say(Text.translatable(LostKeys.MOD_ID+".info.none"));
         }
 
         MutableText text = Text.empty();
+        if (LostKeysClient.allMode != null) {
+            text.append(Text.translatable(LostKeys.MOD_ID + ".override.all", LostKeysClient.allMode));
+        }
         if (!LostKeysClient.keyOverrides.isEmpty()) {
-            if (LostKeysClient.allMode != null) {
-                text.append(Text.translatable(LostKeys.MOD_ID + ".override.all", LostKeysClient.allMode));
-            }
-
             LostKeysClient.keyOverrides.forEach((binding, key) -> text.append(Text.translatable(LostKeys.MOD_ID + ".override", binding, key)));
             LostKeysClient.say(text);
         }
