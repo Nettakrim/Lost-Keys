@@ -1,8 +1,9 @@
 {
   "lost_keys.say": "[Lost Keys]",
+  "lost_keys.info.none": " none",
   "lost_keys.override": "\n%s: %s",
   "lost_keys.override.all": "\nall: %s",
-  "lost_keys.override.none": " none",
+  "lost_keys.bind_command": "\n%s: %s",
   "lost_keys.log.key": " none: %s",
   "lost_keys.log.binding": " %s: %s"
 }

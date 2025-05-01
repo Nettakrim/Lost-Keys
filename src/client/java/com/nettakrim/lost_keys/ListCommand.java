@@ -19,11 +19,12 @@ public class ListCommand {
     }
 
     public static int list(CommandContext<FabricClientCommandSource> context) {
-        if (LostKeysClient.keyOverrides.isEmpty()) {
+        if (LostKeysClient.keyOverrides.isEmpty() && LostKeysClient.commandBinds.isEmpty()) {
             LostKeysClient.say(Text.translatable(LostKeys.MOD_ID+".override.none"));
-        } else {
-            MutableText text = Text.empty();
+        }
 
+        MutableText text = Text.empty();
+        if (!LostKeysClient.keyOverrides.isEmpty()) {
             if (LostKeysClient.allMode != null) {
                 text.append(Text.translatable(LostKeys.MOD_ID + ".override.all", LostKeysClient.allMode));
             }
@@ -31,6 +32,10 @@ public class ListCommand {
             for (KeyOverride keyOverride : LostKeysClient.keyOverrides) {
                 text.append(Text.translatable(LostKeys.MOD_ID + ".override", keyOverride.binding(), keyOverride.key()));
             }
+            LostKeysClient.say(text);
+        }
+        if (!LostKeysClient.commandBinds.isEmpty()) {
+            LostKeysClient.commandBinds.forEach((key, command) -> text.append(Text.translatable(LostKeys.MOD_ID + ".bind_command", key, command)));
             LostKeysClient.say(text);
         }
         return 1;
