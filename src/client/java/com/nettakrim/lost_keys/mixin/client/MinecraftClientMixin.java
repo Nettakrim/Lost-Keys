@@ -1,6 +1,5 @@
 package com.nettakrim.lost_keys.mixin.client;
 
-import com.nettakrim.lost_keys.KeyOverride;
 import com.nettakrim.lost_keys.LostKeysClient;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
@@ -23,10 +22,10 @@ public class MinecraftClientMixin {
             return;
         }
 
-        for (KeyOverride keyOverride : LostKeysClient.keyOverrides) {
-            if (keyOverride.key().equals("pressed")) {
-                KeyBindingAccessor.getBinding().get(keyOverride.binding()).setPressed(true);
+        LostKeysClient.keyOverrides.forEach((binding, key) -> {
+            if (key.equals("pressed")) {
+                KeyBindingAccessor.getBinding().get(binding).setPressed(true);
             }
-        }
+        });
     }
 }

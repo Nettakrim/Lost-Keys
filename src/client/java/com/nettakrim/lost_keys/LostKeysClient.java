@@ -15,15 +15,13 @@ import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class LostKeysClient implements ClientModInitializer {
 	public static String allMode = null;
-	public static List<KeyOverride> keyOverrides = new ArrayList<>();
-	public static HashMap<String, String> commandBinds = new HashMap<>();
+	public static Map<String, String> keyOverrides = new HashMap<>();
+	public static Map<String, String> commandBinds = new HashMap<>();
 
 	public static boolean logNext = false;
 
@@ -46,7 +44,7 @@ public class LostKeysClient implements ClientModInitializer {
 	}
 
 	public static void addOverride(String binding, String key) {
-		keyOverrides.removeIf((override) -> override.binding().equals(binding));
+		keyOverrides.remove(binding);
 
 		Map<String, KeyBinding> keyBindings = KeyBindingAccessor.getBinding();
 
@@ -73,7 +71,7 @@ public class LostKeysClient implements ClientModInitializer {
 			return;
 		}
 
-		keyOverrides.add(new KeyOverride(binding, key));
+		keyOverrides.put(binding, key);
 	}
 
 	public static void addCommandBind(String binding, String command) {

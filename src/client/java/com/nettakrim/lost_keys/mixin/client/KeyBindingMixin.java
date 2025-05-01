@@ -3,7 +3,6 @@ package com.nettakrim.lost_keys.mixin.client;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.nettakrim.lost_keys.KeyBindingInterface;
-import com.nettakrim.lost_keys.KeyOverride;
 import com.nettakrim.lost_keys.LostKeys;
 import com.nettakrim.lost_keys.LostKeysClient;
 import net.minecraft.client.option.KeyBinding;
@@ -71,10 +70,13 @@ public abstract class KeyBindingMixin implements KeyBindingInterface {
             }
         }
 
-        for (KeyOverride keyOverride : LostKeysClient.keyOverrides) {
+        for (Map.Entry<String, String> entry : LostKeysClient.keyOverrides.entrySet()) {
+            String binding = entry.getKey();
+            String key = entry.getValue(); // name "key" is unrelated to the "key" of the set
+
             // stop key being activated by vanilla functionality if its overridden
-            if (original != null && original.getTranslationKey().equals(keyOverride.binding())) {
-                if (keyOverride.key().equals("pressed")) {
+            if (original != null && original.getTranslationKey().equals(binding)) {
+                if (key.equals("pressed")) {
                     original.setPressed(true);
                     return null;
                 }
@@ -82,14 +84,14 @@ public abstract class KeyBindingMixin implements KeyBindingInterface {
             }
 
             // activate all bindings of the given key
-            String targetKey = keyOverride.key();
+            String targetKey = key;
             KeyBinding redirect = KEYS_BY_ID.get(targetKey);
             if (redirect != null) {
                 targetKey = redirect.getBoundKeyTranslationKey();
             }
 
             if (pressedKey.getTranslationKey().equals(targetKey)) {
-                KeyBinding targetBinding = KEYS_BY_ID.get(keyOverride.binding());
+                KeyBinding targetBinding = KEYS_BY_ID.get(binding);
                 if (targetBinding != null) {
                     targetBinding.setPressed(pressed);
                 }
@@ -106,31 +108,30 @@ public abstract class KeyBindingMixin implements KeyBindingInterface {
             return original;
         }
 
-        for (KeyOverride keyOverride : LostKeysClient.keyOverrides) {
-            if (keyOverride.binding().equals(getTranslationKey())) {
-                if (keyOverride.key().equals("none")) {
-                    return false;
-                }
-                if (keyOverride.key().equals("pressed")) {
-                    exhausted = true;
-                    return true;
-                }
-
-                // getting the keybinding from a keyboard key is awkward
-                KeyBinding redirect = KEYS_BY_ID.get(keyOverride.key());
-
-                if (redirect == null) {
-                    return original;
-                }
-
-                KeyBindingMixin mixin = (KeyBindingMixin)(Object)redirect;
-
-                exhausted = true;
-                return mixin.value1 && !mixin.value2;
-            }
+        String key = LostKeysClient.keyOverrides.get(getTranslationKey());
+        if (key == null) {
+            return original;
         }
 
-        return original;
+        if (key.equals("none")) {
+            return false;
+        }
+        if (key.equals("pressed")) {
+            exhausted = true;
+            return true;
+        }
+
+        // getting the keybinding from a keyboard key is awkward
+        KeyBinding redirect = KEYS_BY_ID.get(key);
+
+        if (redirect == null) {
+            return original;
+        }
+
+        KeyBindingMixin mixin = (KeyBindingMixin)(Object)redirect;
+
+        exhausted = true;
+        return mixin.value1 && !mixin.value2;
     }
 
     @Override

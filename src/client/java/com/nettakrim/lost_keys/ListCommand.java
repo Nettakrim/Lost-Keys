@@ -29,9 +29,7 @@ public class ListCommand {
                 text.append(Text.translatable(LostKeys.MOD_ID + ".override.all", LostKeysClient.allMode));
             }
 
-            for (KeyOverride keyOverride : LostKeysClient.keyOverrides) {
-                text.append(Text.translatable(LostKeys.MOD_ID + ".override", keyOverride.binding(), keyOverride.key()));
-            }
+            LostKeysClient.keyOverrides.forEach((binding, key) -> text.append(Text.translatable(LostKeys.MOD_ID + ".override", binding, key)));
             LostKeysClient.say(text);
         }
         if (!LostKeysClient.commandBinds.isEmpty()) {
