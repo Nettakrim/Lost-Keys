@@ -9,6 +9,7 @@ import com.nettakrim.lost_keys.LostKeysClient;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.text.Text;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -36,7 +37,7 @@ public abstract class KeyBindingMixin implements KeyBindingInterface {
     @Unique private static final Set<InputUtil.Key> pressedCommands = new HashSet<>();
 
     @ModifyExpressionValue(at = @At(value = "INVOKE", target = "Ljava/util/Map;get(Ljava/lang/Object;)Ljava/lang/Object;"), method = "setKeyPressed")
-    private static <V> V applyKeyOverrides(V originalV, InputUtil.Key pressedKey, boolean pressed) {
+    private static <V> V applyKeyOverrides(@Nullable V originalV, InputUtil.Key pressedKey, boolean pressed) {
         KeyBinding original = (KeyBinding)originalV;
 
         String command = LostKeysClient.commandBinds.get(pressedKey.getTranslationKey());
